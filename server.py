@@ -29,7 +29,7 @@ app = Flask(__name__, template_folder=tmpl_dir)
 #
 #     DATABASEURI = "postgresql://gravano:foobar@35.243.220.243/proj1part2"
 #
-DATABASEURI = "postgresql://mlb2249:2910@35.243.220.243/proj1part2"
+DATABASEURI = "postgresql://mlb2249:2910@35.231.103.173/proj1part2"
 
 
 #
@@ -41,7 +41,10 @@ engine = create_engine(DATABASEURI)
 # Example of running queries in your database
 # Note that this will probably not work if you already have a table named 'test' in your database, containing meaningful data. This is only an example showing you how to run queries in your database using SQLAlchemy.
 #
-engine.execute(""" SELECT * FROM ALBUM;""")
+engine.execute("""CREATE TABLE IF NOT EXISTS test (
+        id serial,
+        name text
+        ); """)
 engine.execute("""INSERT INTO test(name) VALUES ('grace hopper'), ('alan turing'), ('ada lovelace');""")
 
 
