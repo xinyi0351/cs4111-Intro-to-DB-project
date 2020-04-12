@@ -141,10 +141,48 @@ def artview():
         if not musicians:
             error2 = 'No musicians listed'
 
+        if error:
+            flash(error)
+
+        if error2:
+            flash(error2)
+
         context = dict(artistres = output, artistmsc = musicians)
 
         return render_template("index.html", **context)
 
 
 
+@app.route('/albview', methods = ['POST'])
+def albview():
 
+    #show list of all songs and albums by an artist
+    if request.method = 'POST':
+        album = request.form('album')
+
+        error = 0
+        if not album:
+            error = 'Please enter an album'
+
+        output = []
+
+        #get table of all songs in album and artist who wrote album 
+        cursor = g.conn.execute("SELECT song_name, album_name, artist_name
+                                FROM song AS so, contains AS c, album AS al, creates_album AS ca, artist AS ar
+                                WHERE so.song_id = c.song_id AND c.album_id = al.album_id
+                                AND al.album_id = ca.album_id AND ca.artist_id = ar.artist_id
+                                AND al.album_name = (%s)", album)
+
+        for result in cursor:
+            output.append(result[0], result[1], result[2])
+
+        if not output:
+            error = 'No results'
+
+        if error:
+            flash(error)
+
+        context = dict(albumres = output)
+
+        return render_template("index.html", **context)
+ 
