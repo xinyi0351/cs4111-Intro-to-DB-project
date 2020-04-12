@@ -93,7 +93,7 @@ def lookup():
         if error:
             flash(error)
 
-        context = dict(data = output)
+        context = dict(searchresult = output)
 
         return render_template("index.html", **context)
 
