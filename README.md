@@ -7,4 +7,4 @@ Around ten pages are showed in the template folder. They are designed to accompl
 
 Although no bootstrap UI is introduced currently. We do designed the interface just for fun.
 
-Leave a comment!
+**Leave a comment!**
