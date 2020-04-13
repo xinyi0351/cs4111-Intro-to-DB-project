@@ -1,45 +1,73 @@
 <!DOCTYPE html>
 <html>
+    <style>
+    .clearfix:before,
+    .clearfix:after{content: ' ';display: table;}
+    .clearfix:after{clear:both;}
+    .side{
+        float: left;
+        width: 300px;
+        height: 300px;
+        background-color:black; color:white;
+        /*position:relative;left:50%;top:50%;*/
+        margin-left: 200px;margin-top: 200px;}
+    .main{
+        margin-left: 250px;margin-top: 200px;
+        height: 400px;
+        /*position:relative;left:50%;top:50%;*/}
+    footer{
+        text-align:center;
+        clear:both;
+        padding:5px;
+        background-color: #eee;}
+    .box{
+      position:absolute;
+      top:50%;
+      left:50%;
+      transform:translate(-50%,-50%);
+    }
+    </style>
+
     <body>
-        <div>
-            <form method="POST" action="/lookup">
-                <h1>Lookup</h1>
-                <p> Enter a song, album, or artist to search our database</p>
-                <label for="entry"><b>Enter</b></label>
-                <input type="text" placeholder="Entry" name="entry" id="entry">
-                <button type="submit" class="registerbtn"> Search</button>
-            </form>
+        <div class="clearfix">
+            <div class="side">
+                <form method="POST" action="/lookup">
+                    <h1>Search</h1>
+                    <p> Enter a song, album, or artist to search our database</p>
+                    <label for="entry"><b>Enter</b></label>
+                    <input type="text" placeholder="Entry" name="entry" id="entry">
+                    <button type="submit" class="registerbtn"> Search</button>
+                </form>
+            </div>
+
+            <div class='main'>
+                <h1> Artists </h1>
+                
+                <ul>
+                    {% for n in artist %}
+                    <li>{{n['artist_name']}}</li>
+                    {% endfor %}
+                </ul>
+
+                <h1> Albums </h1>
+                
+                <ul>
+                    {% for n in album %}
+                    <li>{{n['album_name']}}, {{n['artist_name']}}</li>
+                    {% endfor %}
+                </ul>
+
+                <h1> Songs </h1>
+
+                <ul>
+                    {% for n in song %}
+                    <li>{{n['song_name']}}, {{n['artist_name']}}</li>
+                    {% endfor %}
+                </ul>
+            </div>
         </div>
-
-	<h1> Artists </h1>
-	
-	<ul>
-    	{% for n in artist %}
-    	    <li>{{n['artist_name']}}</li>
-    	{% endfor %}
-        </ul>
-
-	<h1> Albums </h1>
-	
-	<ul>
-    	{% for n in album %}
-	<li>{{n['album_name']}}, {{n['artist_name']}}</li>
-    	{% endfor %}
-        </ul>
-
-	<h1> Songs </h1>
-
-	<ul>
-    	{% for n in song %}
-	<li>{{n['song_name']}}, {{n['artist_name']}}</li>
-    	{% endfor %}
-        </ul>
-
-
-        <p><a href="musicsearch">Go back</a></p>
- 
-
+        
+        <footer><p><a href="musicsearch">Go back</a></p></footer>
 
     </body>
 </html>
-
