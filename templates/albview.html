@@ -1,6 +1,23 @@
 <html>
+	<style>
+    .box{
+      position:absolute;
+      top:50%;
+      left:50%;
+      transform:translate(-50%,-50%);
+    }
+	body{
+		font-size: 15pt;
+		font-family: arial;
+	}
+	footer{
+        text-align:center;
+        clear:both;
+        padding:5px;
+        background-color: #eee;}
+	</style>
     <body>
-        <div>
+        <div class="box">
 
 	    <form method="POST" action="/albview">
 		<h1>Album View</h1>
@@ -10,12 +27,14 @@
 		<input type="submit" value="Album Lookup">
   	    </form>
 
-	    <h1> Songs in this album </h1>
+	    <h2> Songs in this album </h2>
 	     {% for row in albumres %} 
 	        <p> {{ row['song_name'] }} from {{ row['album_name'] }} by {{ row['artist_name'] }} </p> 
-	    {% endfor %} 
-
-	    <p><a href="musicsearch">back</a></p>
+		{% endfor %} 
+		<br>
+		<br>
+		<br>
+	    <footer><a href="musicsearch">back</a></footer>
         </div>
     </body>
 </html>
