@@ -1,12 +1,23 @@
 <html>
-    <body>
-        <div>
-
-	    <p><a href="lookup">Search our database</a></p>
-
-	    <p><a href="artview">Look up an artist</a></p>
-
-	    <p><a href="albview">Look up an album</a></p>
+    <style>
+    .box{
+      position:absolute;
+      top:40%;
+      left:50%;
+      transform:translate(-50%,-50%);
+    }
+    .square{ 
+        background-color: black; color:rgb(204, 235, 232);
+        height: 50px; width: 350px;
+        align-content: center;
+    }
+    </style>
+    <body class="box">
+        <div class="square">
+            <h1>Tiny Music Search</h1><br>
+            <h3><a href="lookup">Search our database</a> </h3>          
+            <h3><a href="artview">Look up an artist</a></h3>      
+            <h3><a href="albview">Look up an album</a></h3>    
        </div>
     </body>
 </html>
