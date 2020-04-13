@@ -17,6 +17,7 @@ app = Flask(__name__, template_folder=tmpl_dir)
    sample from server.py
    insertion query
 
+
 @app.route('/add', methods=['POST'])
 def add():
   name = request.form['name']
@@ -48,6 +49,11 @@ def index():
 
 """
 
+@app.route('/musicsearch', methods=['GET'])
+def musicsearch():
+    if request.method == 'GET':
+        return render_template("musicsearch.html")
+
 
 @app.route('/lookup', methods=['POST'])
 def lookup():
@@ -58,33 +64,22 @@ def lookup():
         if not entry:
             error = 'Please enter a search term'
 
-        output = []
-
         # lookup artist
         cursor = g.conn.execute("SELECT artist_name FROM artist WHERE artist_name = (%s)", entry)
 
-        for result in cursor:
-            output.append(result[0], " ")
+        artist = cursor.fetchall()
         cursor.close()
 
         # lookup album
-        cursor = g.conn.execute("SELECT album_name, artist_name 
-                                FROM album AS al, creates_album AS c, artist AS ar
-                                WHERE al.album_id = c.album_id AND c.artist_id = ar.artist_id
-                                AND al.album_name = (%s)", entry)
+        cursor = g.conn.execute("SELECT album_name, artist_name FROM album AS al, creates_album AS c, artist AS ar WHERE al.album_id = c.album_id AND c.artist_id = ar.artist_id AND al.album_name = (%s)", entry)
 
-        for result in cursor:
-            output.append(result[0], result[1])
+        album = cursor.fetchall()
         cursor.close()
 
         # lookup song
-        cursor = g.conn.execute("SELECT song_name, artist_name 
-                                FROM song AS so, creates_album AS c, artist AS ar
-                                WHERE so.song_id = c.song_id AND c.artist_id = ar.artist_id
-                                AND so.song_name = (%s)", entry)
+        cursor = g.conn.execute("SELECT song_name, artist_name FROM song AS so, creates_album AS c, artist AS ar WHERE so.song_id = c.song_id AND c.artist_id = ar.artist_id AND so.song_name = (%s)", entry)
 
-        for result in cursor:
-            output.append(result[0], result[1])
+        song = cursor.fetchall()
         cursor.close()
 
         if not output:
@@ -93,9 +88,9 @@ def lookup():
         if error:
             flash(error)
 
-        context = dict(searchresult = output)
-
-        return render_template("index.html", **context)
+        return render_template("lookup.html", artist=artist, album=album, song=song)
+    else:
+        return render_template("lookup.html")
 
 
 @app.route('/artview', methods = ['POST'])
@@ -109,8 +104,6 @@ def artview():
         if not artist:
             error = 'Please enter an artist'
 
-        output = []
-
         #get table of songs and corresponding albums by artist
         cursor = g.conn.execute("SELECT song_name, album_name, song.published_date
                                 FROM artist, perform, song, contains, album
@@ -118,14 +111,11 @@ def artview():
                                 AND song.song_id = containst.song_id AND album.album_id = contains.album_id
                                 AND artist.artist_name = (%s)", artist)
         
-        for result in cursor:
-            output.append(result[0], result[1], result[2])
-        cursor.close()
+        artistres = cursor.fetchall()
+        cursor.close
         
-        if not output:
+        if not artistres:
             error = 'No results'
-
-        musicians = []
 
         #get table of musicians who are members of the artist
         cursor = g.conn.execute("SELECT musician_name, role, artist_name
@@ -135,6 +125,9 @@ def artview():
 
         for result in cursor:
             musicians.append(result[0], result[1], result[2])
+        cursor.close()
+
+        musicians = cursor.fetchall()
         cursor.close()
         
         error2 = 0
@@ -147,9 +140,7 @@ def artview():
         if error2:
             flash(error2)
 
-        context = dict(artistres = output, artistmsc = musicians)
-
-        return render_template("index.html", **context)
+        return render_template("artview.html", artistres = artistres, musicians = musicians)
 
 
 
@@ -184,5 +175,5 @@ def albview():
 
         context = dict(albumres = output)
 
-        return render_template("index.html", **context)
+        return render_template("albview.html", albumres = output)
  

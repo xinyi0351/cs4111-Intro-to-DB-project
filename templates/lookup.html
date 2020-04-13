@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+    <body>
+        <div>
+            <form method="POST" action="/lookup">
+                <h1>Lookup</h1>
+                <p> Enter a song, album, or artist to search our database</p>
+                <label for="entry"><b>Enter</b></label>
+                <input type="text" placeholder="Entry" name="entry" id="entry">
+                <button type="submit" class="registerbtn"> Search</button>
+            </form>
+        </div>
+
+	<h1> Artists </h1>
+	
+	<ul>
+    	{% for n in artist %}
+    	    <li>{{n['artist_name']}}</li>
+    	{% endfor %}
+        </ul>
+
+	<h1> Albums </h1>
+	
+	<ul>
+    	{% for n in album %}
+	<li>{{n['album_name']}}, {{n['artist_name']}}</li>
+    	{% endfor %}
+        </ul>
+
+	<h1> Songs </h1>
+
+	<ul>
+    	{% for n in song %}
+	<li>{{n['song_name']}}, {{n['artist_name']}}</li>
+    	{% endfor %}
+        </ul>
+
+
+        <p><a href="musicsearch">Go back</a></p>
+ 
+
+
+    </body>
+</html>
+

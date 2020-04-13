@@ -1,0 +1,31 @@
+<html>
+    <body>
+        <div>
+
+	    <form method="POST" action="/artview">
+		<h1>Artist View</h1>
+		<p> View all music created by an artist</p>
+		<label for="artist"><b>Artist</b></label>
+		<input type="text" name="artist" id="artist">
+		<input type="submit" value="Artist Lookup">
+	    </form>
+
+	    <h1> Songs by this artist </h1>
+	    <ul>
+	    {% for row in artistres %}
+	        <li> {{ row['song_name'] }} from {{ row['album_name'] }}, released {{ row['published_date'] }} </li>
+	    {% endfor %}
+	    </ul>
+
+	    <h1> Musicians </h1>
+	    <ul>
+            {% for row in musicians %}
+	        <li> {{ row['name'] }}, {{ row['role'] }} </li>
+	    {% endfor %}
+	    </ul>
+
+	    <p><a href="musicsearch">Go back</a></p>
+        </div>
+    </body>
+</html>
+

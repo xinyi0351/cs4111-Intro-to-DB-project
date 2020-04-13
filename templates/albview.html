@@ -1,0 +1,22 @@
+<html>
+    <body>
+        <div>
+
+	    <form method="POST" action="/albview">
+		<h1>Album View</h1>
+		<p> View all songs in an album </p>
+		<label for="album"><b>Album</b></label>
+		<input type="text" name="album" id="album">
+		<input type="submit" value="Album Lookup">
+  	    </form>
+
+	    <h1> Songs in this album </h1>
+	     {% for row in albumres %} 
+	        <p> {{ row['song_name'] }} from {{ row['album_name'] }} by {{ row['artist_name'] }} </p> 
+	    {% endfor %} 
+
+	    <p><a href="musicsearch">back</a></p>
+        </div>
+    </body>
+</html>
+
