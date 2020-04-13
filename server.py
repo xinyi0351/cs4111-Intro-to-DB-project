@@ -209,16 +209,20 @@ def register():
       password  =request.form['password']
       passwordcomfirm = request.form['passwordcomfirm']
       if password != passwordcomfirm:
-        flash(message='Sorry you just entered different passwords.')
+        flash('Sorry you just entered different passwords.')
         return render_template('register.html')
-      result = g.conn.execute("SELECT * FROM member WHERE Username = \'%s\'" %(request.form['username']))
+      result = engine.execute("SELECT * FROM member WHERE User_Id = \'%s\'" %(request.form['userid']))
       if result.rowcount >0:
-        flash(message="Oops. Username is taken")
+        flash("Oops. The ID is taken!")
         return render_template('register.html')
-      g.conn.execute("INSERT INTO member (Username, Password) VALUES (\'%s\',\'%s\')" %(request.form['username'], request.form['password']))
+      result = engine.execute("SELECT * FROM member WHERE Username = \'%s\'" %(request.form['username']))
+      if result.rowcount >0:
+        flash("Oops. The username is taken")
+        return render_template('register.html')
+      engine.execute("INSERT INTO member (User_Id,Username, Birthday, Password) VALUES (\'%s\',\'%s\',\'%s\',\'%s\')" %(request.form['userid'],request.form['username'],request.form['Birthday'], password))
       session['username'] = request.form['username']
       session['logged_in'] = True
-      user = {'Username': request.form['username']}
+      session['user'] = {'Username': request.form['username']}
       return home()
     else:
       return render_template('register.html')
