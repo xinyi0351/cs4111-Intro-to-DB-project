@@ -178,30 +178,25 @@ def home():
   else:
     return render_template('index.html')
 
-
-@app.route('/login',methods=['POST','GET'])
+@app.route('/login', methods={'POST','GET'})
 def login():
-    if request.method =='GET':
-      username = request.form['username']
+    if request.method=='POST':
+      username  =request.form['username']
       password = request.form['password']
-      result = g.conn.execute("SELECT Password FROM member WHERE Username= \'%s'" %(username)).first()
-      if result.rowcount >0:
-        password = result.first[0]
-      else:
-        flash(message="Seems like we don't know you yet. Why don't you register first?")
-
-      if request.form['password'] == password and result is not None:
-        session['username'] = request.form['username']
-        session['logged_in'] = True
-        result = g.conn.execute("SELECT* FROM member WHERE Username = \'%s\'"%(username)).first()
-        user = {'Your ID': result[0], 'Name': result[1], 'Birthday': result[2]}
-        session['user'] = user
-        return home()
-      elif request.form['password']!=password:
-        flash(message='Wrong password. Try again!')
-      return render_template('login.html')
+      result = engine.execute("SELECT * FROM member WHERE Username = \'%s\'" %(request.form['username']))
+      true = engine.execute("SELECT password FROM member WHERE Username = \'%s\'" %(request.form['username']))
+      if result.rowcount > 0 and password != true.first()[0]:
+        flash('Wrong password. Try again!')
+        return render_template('login.html')
+      if result.rowcount <= 0:
+        flash("Seems like we don't know you yet. Why don't you register first?")
+        return render_template('login.html') 
+      session['username'] = request.form['username']
+      session['logged_in'] = True
+      session['user'] = {'Username': request.form['username']}
+      return home()
     else:
-      return render_template('index.html')
+      return render_template('login.html')
 
 @app.route('/register', methods={'POST','GET'})
 def register():
@@ -209,20 +204,23 @@ def register():
       password  =request.form['password']
       passwordcomfirm = request.form['passwordcomfirm']
       if password != passwordcomfirm:
-        flash(message='Sorry you just entered different passwords.')
+        flash('Sorry you just entered different passwords.')
         return render_template('register.html')
-      result = g.conn.execute("SELECT * FROM member WHERE Username = \'%s\'" %(request.form['username']))
+      result = engine.execute("SELECT * FROM member WHERE User_Id = \'%s\'" %(request.form['userid']))
       if result.rowcount >0:
-        flash(message="Oops. Username is taken")
+        flash("Oops. The ID is taken!")
         return render_template('register.html')
-      g.conn.execute("INSERT INTO member (Username, Password) VALUES (\'%s\',\'%s\')" %(request.form['username'], request.form['password']))
+      result = engine.execute("SELECT * FROM member WHERE Username = \'%s\'" %(request.form['username']))
+      if result.rowcount >0:
+        flash("Oops. The username is taken")
+        return render_template('register.html')
+      engine.execute("INSERT INTO member (User_Id,Username, Birthday, Password) VALUES (\'%s\',\'%s\',\'%s\',\'%s\')" %(request.form['userid'],request.form['username'],request.form['Birthday'], password))
       session['username'] = request.form['username']
       session['logged_in'] = True
-      user = {'Username': request.form['username']}
+      session['user'] = {'Username': request.form['username']}
       return home()
     else:
       return render_template('register.html')
-
 
 if __name__ == "__main__":
   import click

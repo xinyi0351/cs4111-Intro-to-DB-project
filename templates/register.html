@@ -1,24 +1,75 @@
 <!DOCTYPE html>
 <html>
+    <style>
+        body{ 
+          font-size: 15pt;
+          font-family: arial;
+        }
+        .main{
+        text-align: center;
+        border-radius: 20px;
+        /* width: 200px;
+        height: 350px; */
+        margin: auto;
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        }
+        .box{
+            position:absolute;
+            top:50%;
+            left:50%;
+            transform:translate(-50%,-50%);
+        }
+    </style>
+
     <body>
-        <div>
+        <div class="box">
             <form method="POST" action="/register">
                 <h1>Registration</h1>
-                <p> Hey there! Join us now!</p>
+                <p> 
+                    Hey there! Join us now!
+                </p>
+                <br>
+                <label for="userid"><b>UserID</b></label>
+                <input type="text" placeholder="UserID" name="userid" required>
+                Please enter an ID you like. It must has six digits start with 11.
+                <br>
+                <br>
+                <br>
                 <label for="username"><b>Username</b></label>
                 <input type="text" placeholder="Username" name="username" required>
-
+                <br>
+                <br>
+                <br>
                 <label for="Birthday"><b>Birthday</b></label>
                 <input type="date" placeholder="Birthday" name="Birthday" required>
-
+                <br>
+                <br>
+                <br>
                 <label for="password"><b>Password</b></label>
                 <input type="text" placeholder="password" name="password" required>
-
+                <br>
+                <br>
+                <br>
                 <label for="password-comfirm"><b>Comfirm your password</b></label>
                 <input type="text" placeholder="Comfirm your password" name="passwordcomfirm" required>
-
+                <br>
+                <br>
+                <br>
                 <button type="submit" class="registerbtn"> Register</button>
             </form>
         </div>
     </body>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+        <ul class=flashes>
+            {% for category, message in messages %}
+            <li class="{{ category }}">{{ message }}</li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+    {% endwith %}
 </html>
