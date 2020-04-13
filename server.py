@@ -178,30 +178,25 @@ def home():
   else:
     return render_template('index.html')
 
-
-@app.route('/login',methods=['POST','GET'])
+@app.route('/login', methods={'POST','GET'})
 def login():
-    if request.method =='GET':
-      username = request.form['username']
+    if request.method=='POST':
+      username  =request.form['username']
       password = request.form['password']
-      result = g.conn.execute("SELECT Password FROM member WHERE Username= \'%s'" %(username)).first()
-      if result.rowcount >0:
-        password = result.first[0]
-      else:
-        flash(message="Seems like we don't know you yet. Why don't you register first?")
-
-      if request.form['password'] == password and result is not None:
-        session['username'] = request.form['username']
-        session['logged_in'] = True
-        result = g.conn.execute("SELECT* FROM member WHERE Username = \'%s\'"%(username)).first()
-        user = {'Your ID': result[0], 'Name': result[1], 'Birthday': result[2]}
-        session['user'] = user
-        return home()
-      elif request.form['password']!=password:
-        flash(message='Wrong password. Try again!')
-      return render_template('login.html')
+      result = engine.execute("SELECT * FROM member WHERE Username = \'%s\'" %(request.form['username']))
+      true = engine.execute("SELECT password FROM member WHERE Username = \'%s\'" %(request.form['username']))
+      if result.rowcount > 0 and password != true.first()[0]:
+        flash('Wrong password. Try again!')
+        return render_template('login.html')
+      if result.rowcount <= 0:
+        flash("Seems like we don't know you yet. Why don't you register first?")
+        return render_template('login.html') 
+      session['username'] = request.form['username']
+      session['logged_in'] = True
+      session['user'] = {'Username': request.form['username']}
+      return home()
     else:
-      return render_template('index.html')
+      return render_template('login.html')
 
 @app.route('/register', methods={'POST','GET'})
 def register():
@@ -226,7 +221,6 @@ def register():
       return home()
     else:
       return render_template('register.html')
-
 
 if __name__ == "__main__":
   import click
